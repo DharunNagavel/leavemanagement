@@ -24,7 +24,7 @@ const Page = () => {
   useEffect(() => {
     const fetchdata = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/status/${id}`);
+        const res = await fetch(`/api/status/${id}`);
         if (!res.ok) {
           throw new Error('Failed to fetch leaves');
         }
@@ -42,7 +42,7 @@ const Page = () => {
   useEffect(() => {
     const fetchdata = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/status/organization/${organization}`);
+        const res = await fetch(`/api/status/organization/${organization}`);
         if (!res.ok) {
           throw new Error('Failed to fetch leaves for organization');
         }
@@ -56,7 +56,7 @@ const Page = () => {
   }, [organization]);
 
   const handleAccept = async (leaveId: number) => {
-    await fetch(`http://localhost:3000/api/status/accept/${leaveId}`, {
+    await fetch(`/api/status/accept/${leaveId}`, {
       method: "POST",
     });
     setTfetch((prev) =>
@@ -67,7 +67,7 @@ const Page = () => {
   };
 
   const handleReject = async (leaveId: number) => {
-    await fetch(`http://localhost:3000/api/status/reject/${leaveId}`, {
+    await fetch(`/api/status/reject/${leaveId}`, {
       method: "POST",
     });
     setTfetch((prev) =>

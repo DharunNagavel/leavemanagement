@@ -15,7 +15,7 @@ const Page = () => {
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("http://localhost:3000/api/leave", 
+    const res = await fetch("/api/leave", 
     {
       method: "POST",
       headers: { "Content-Type": "application/json" },
