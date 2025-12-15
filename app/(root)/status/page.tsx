@@ -3,11 +3,23 @@
 import { useAuthStore } from "@/app/store/authStore";
 import { useState, useEffect } from "react";
 
+type LeaveStatus = "pending" | "accepted" | "rejected";
+
+type Leave = {
+  id: number;
+  name: string;
+  organization: string;
+  purpose: string;
+  year: string;
+  section: string;
+  status: LeaveStatus;
+};
+
 const Page = () => {
   const {id, role, organization} = useAuthStore();
-  const [leaves, setLeaves] = useState([]);
-  const [Tfetch, setTfetch] = useState([]);
-  const [filter, setFilter] = useState("All"); // State to track current filter
+  const [leaves, setLeaves] = useState<Leave[]>([]);
+  const [Tfetch, setTfetch] = useState<Leave[]>([]);
+  const [filter, setFilter] = useState<"All" | "pending" | "accepted" | "rejected">("All");
 
   useEffect(() => {
     const fetchdata = async () => {
@@ -17,7 +29,7 @@ const Page = () => {
           throw new Error('Failed to fetch leaves');
         }
         const result = await res.json();
-        setLeaves(result.data);
+        setLeaves(result.data ?? []);
       } catch (error) {
         console.error('Error fetching leaves:', error);
       }
@@ -35,7 +47,7 @@ const Page = () => {
           throw new Error('Failed to fetch leaves for organization');
         }
         const result = await res.json();
-        setTfetch(result.data);
+        setTfetch(result.data ?? []);
       } catch (error) {
         console.log('Error fetching leaves for organization:', error);
       }
@@ -66,20 +78,20 @@ const Page = () => {
   };
 
   // Filter function for student view
-  const filterStudentLeaves = (leavesArray) => {
+  const filterStudentLeaves = (leavesArray: Leave[]): Leave[] =>{
     if (filter === "All") return leavesArray;
-    if (filter === "Pending") return leavesArray.filter(item => item.status === "pending");
-    if (filter === "Accepted") return leavesArray.filter(item => item.status === "accepted");
-    if (filter === "Rejected") return leavesArray.filter(item => item.status === "rejected");
+    if (filter === "pending") return leavesArray.filter(item => item.status === "pending");
+    if (filter === "accepted") return leavesArray.filter(item => item.status === "accepted");
+    if (filter === "rejected") return leavesArray.filter(item => item.status === "rejected");
     return leavesArray;
   };
 
   // Filter function for teacher view
-  const filterTeacherLeaves = (leavesArray) => {
+  const filterTeacherLeaves = (leavesArray: Leave[]): Leave[] =>{
     if (filter === "All") return leavesArray;
-    if (filter === "Pending") return leavesArray.filter(item => item.status === "pending");
-    if (filter === "Accepted") return leavesArray.filter(item => item.status === "accepted");
-    if (filter === "Rejected") return leavesArray.filter(item => item.status === "rejected");
+    if (filter === "pending") return leavesArray.filter(item => item.status === "pending");
+    if (filter === "accepted") return leavesArray.filter(item => item.status === "accepted");
+    if (filter === "rejected") return leavesArray.filter(item => item.status === "rejected");
     return leavesArray;
   };
 
@@ -101,24 +113,24 @@ const Page = () => {
           </div>
           <div>
             <button 
-              className={`hover:cursor-pointer p-3 rounded-xl ${filter === "Pending" ? "bg-black text-white" : "bg-gray-200 text-black"}`}
-              onClick={() => setFilter("Pending")}
+              className={`hover:cursor-pointer p-3 rounded-xl ${filter === "pending" ? "bg-black text-white" : "bg-gray-200 text-black"}`}
+              onClick={() => setFilter("pending")}
             >
               Pending
             </button>
           </div>
           <div>
             <button 
-              className={`hover:cursor-pointer p-3 rounded-xl ${filter === "Accepted" ? "bg-black text-white" : "bg-gray-200 text-black"}`}
-              onClick={() => setFilter("Accepted")}
+              className={`hover:cursor-pointer p-3 rounded-xl ${filter === "accepted" ? "bg-black text-white" : "bg-gray-200 text-black"}`}
+              onClick={() => setFilter("accepted")}
             >
               Accepted
             </button>
           </div>
           <div>
             <button 
-              className={`hover:cursor-pointer p-3 rounded-xl ${filter === "Rejected" ? "bg-black text-white" : "bg-gray-200 text-black"}`}
-              onClick={() => setFilter("Rejected")}
+              className={`hover:cursor-pointer p-3 rounded-xl ${filter === "rejected" ? "bg-black text-white" : "bg-gray-200 text-black"}`}
+              onClick={() => setFilter("rejected")}
             >
               Rejected
             </button>
@@ -128,7 +140,6 @@ const Page = () => {
         {role === 'student' 
         ? (
           <div className="flex flex-col items-center">
-            {/* Check if there are any filtered leaves */}
             {filteredStudentLeaves.length === 0 ? (
               <div className="text-center my-20">
                 <p className="text-2xl font-semibold text-gray-600">
