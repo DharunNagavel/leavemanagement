@@ -22,15 +22,15 @@ const Page = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name,email,role,organization,password}),
       });
-      const data = await res.json();
+      const result = await res.json();
       setAuth({
-      id: data.id,
-      username: data.name,
-      role: data.role,
-      organization: data.organization,
-      });
+      id: result.data.id,
+      username: result.data.name,
+      role: result.data.role,
+      organization: result.data.organization,
+      })
+      console.log(result);
       router.push("/");
-      console.log(data);
     }
   return (
     <div className='flex flex-col items-center justify-center min-h-screen p-2'>

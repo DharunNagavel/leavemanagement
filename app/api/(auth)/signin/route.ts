@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
         message: "Login successful",
         token : token,
         id : user.id,
-        name : user.name,
+        name : user.Name,
         email : user.email,
         role : user.role,
         organization : user.orgnaization
